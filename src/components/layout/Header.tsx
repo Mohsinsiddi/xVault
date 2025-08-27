@@ -11,7 +11,9 @@ import {
   LogOut, 
   Bell,
   Search,
-  ChevronDown 
+  ChevronDown,
+  CreditCard,
+  BarChart3
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -23,8 +25,17 @@ export const Header: React.FC = () => {
     openProfileModal 
   } = useUIStore();
 
+  const handleProfileClick = () => {
+    openProfileModal();
+  };
+
+  const handleUpgradeClick = () => {
+    // Navigate to pricing or subscription upgrade
+    window.location.href = '/pricing';
+  };
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-40 w-full border-b-2 border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="flex h-16 items-center justify-between px-6">
         {/* Left Section */}
         <div className="flex items-center space-x-4">
@@ -33,7 +44,7 @@ export const Header: React.FC = () => {
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="shrink-0 hover:bg-accent"
+            className="shrink-0 hover:bg-accent/80 border border-transparent hover:border-border/50"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -44,8 +55,8 @@ export const Header: React.FC = () => {
               <span className="text-lg font-bold text-white">x</span>
             </div>
             <div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-vault-tech-DEFAULT to-premium-purple bg-clip-text text-transparent">
-                xVault
+              <h1 className="text-xl font-bold text-transparent bg-gradient-to-r from-primary to-violet-500 bg-clip-text">
+                xVaultzz
               </h1>
             </div>
           </div>
@@ -59,10 +70,10 @@ export const Header: React.FC = () => {
               type="text"
               placeholder="Search vaults..."
               className={cn(
-                "w-full rounded-xl border border-border bg-card/50 pl-10 pr-4 py-2.5",
+                "w-full rounded-xl border-2 border-border/60 bg-card/50 pl-10 pr-4 py-2.5",
                 "text-sm placeholder:text-muted-foreground backdrop-blur-sm",
-                "focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent",
-                "transition-all duration-200 hover:border-primary/50"
+                "focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary/50",
+                "transition-all duration-200 hover:border-primary/30 hover:bg-card/70"
               )}
             />
           </div>
@@ -73,57 +84,74 @@ export const Header: React.FC = () => {
           {isAuthenticated ? (
             <>
               {/* Notifications */}
-              <Button variant="ghost" size="icon" className="relative hover:bg-accent">
+              <Button variant="ghost" size="icon" className="relative hover:bg-accent/80 border border-transparent hover:border-border/50">
                 <Bell className="h-5 w-5" />
                 <Badge 
                   variant="destructive" 
-                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-premium-orange"
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-premium-orange border-none"
                 >
                   3
                 </Badge>
               </Button>
 
               {/* User Menu */}
-              <div className="flex items-center space-x-3">
-                <div className="text-right">
-                  <p className="text-sm font-medium">{user?.name}</p>
-                  <p className="text-xs text-muted-foreground capitalize flex items-center">
+              <div className="flex items-center space-x-4">
+                {/* User Info Display */}
+                <div className="text-right hidden md:block">
+                  <p className="text-sm font-semibold text-foreground">{user?.name}</p>
+                  <div className="flex items-center justify-end space-x-1">
                     <div className={cn(
-                      "w-2 h-2 rounded-full mr-1",
+                      "w-2 h-2 rounded-full",
                       user?.plan === 'free' && "bg-muted-foreground",
                       user?.plan === 'basic' && "bg-premium-blue",
                       user?.plan === 'premium' && "bg-premium-purple",
                       user?.plan === 'enterprise' && "bg-premium-orange"
                     )} />
-                    {user?.plan} Plan
-                  </p>
+                    <p className="text-xs text-muted-foreground capitalize">
+                      {user?.plan} Plan
+                    </p>
+                  </div>
                 </div>
                 
+                {/* Profile Menu Button */}
                 <Button
                   variant="ghost"
-                  className="flex items-center space-x-2 px-3 hover:bg-accent rounded-xl"
-                  onClick={openProfileModal}
+                  className="flex items-center space-x-3 px-3 hover:bg-accent/80 rounded-xl border border-transparent hover:border-border/50 transition-all duration-200"
+                  onClick={handleProfileClick}
                 >
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-premium-purple to-premium-pink flex items-center justify-center ring-2 ring-primary/20">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-premium-purple to-premium-pink flex items-center justify-center ring-2 ring-primary/20 shadow-md">
                     {user?.avatar ? (
                       <img src={user.avatar} alt={user.name} className="h-8 w-8 rounded-full" />
                     ) : (
                       <User className="h-4 w-4 text-white" />
                     )}
                   </div>
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 hidden sm:block" />
                 </Button>
 
                 {/* Quick Actions */}
-                <div className="flex items-center space-x-1 border-l border-border pl-3">
-                  <Button variant="ghost" size="icon" className="hover:bg-accent">
+                <div className="flex items-center space-x-1 border-l-2 border-border/60 pl-3">
+                  {/* Upgrade Button for non-premium users */}
+                  {user?.plan === 'free' && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleUpgradeClick}
+                      className="bg-gradient-to-r from-primary/10 to-premium-purple/10 border-primary/30 text-primary hover:bg-gradient-to-r hover:from-primary/20 hover:to-premium-purple/20 transition-all duration-200"
+                    >
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Upgrade
+                    </Button>
+                  )}
+                  
+                  <Button variant="ghost" size="icon" className="hover:bg-accent/80 border border-transparent hover:border-border/50">
                     <Settings className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={logout}
-                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/30"
                   >
                     <LogOut className="h-4 w-4" />
                   </Button>
@@ -136,7 +164,7 @@ export const Header: React.FC = () => {
               <Button
                 variant="ghost"
                 onClick={openLoginModal}
-                className="text-sm hover:bg-accent"
+                className="text-sm hover:bg-accent/80 border border-transparent hover:border-border/50"
               >
                 Sign In
               </Button>
@@ -150,6 +178,49 @@ export const Header: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* User Stats Bar (Optional - only for authenticated users) */}
+      {isAuthenticated && user && (
+        <div className="border-t border-border/40 bg-card/30 backdrop-blur-sm">
+          <div className="flex items-center justify-between px-6 py-2">
+            <div className="flex items-center space-x-6 text-xs">
+              <div className="flex items-center space-x-2">
+                <BarChart3 className="h-3 w-3 text-muted-foreground" />
+                <span className="text-muted-foreground">Total Invested:</span>
+                <span className="font-semibold text-foreground">${user.totalInvested?.toLocaleString() || '0'}</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-muted-foreground">Returns:</span>
+                <span className={cn(
+                  "font-semibold",
+                  (user.totalReturns || 0) >= 0 ? "text-green-500" : "text-red-500"
+                )}>
+                  {user.totalReturns >= 0 ? '+' : ''}${user.totalReturns?.toLocaleString() || '0'}
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-muted-foreground">Return %:</span>
+                <span className={cn(
+                  "font-bold",
+                  (user.totalReturns || 0) >= 0 ? "text-green-500" : "text-red-500"
+                )}>
+                  {user.totalInvested && user.totalInvested > 0
+                    ? `${((user.totalReturns / user.totalInvested) * 100).toFixed(1)}%`
+                    : '0.0%'
+                  }
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-2 text-xs">
+              <span className="text-muted-foreground">Active Vaults:</span>
+              <Badge variant="outline" className="text-xs">
+                {user.subscribedVaults?.length || 0}
+              </Badge>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

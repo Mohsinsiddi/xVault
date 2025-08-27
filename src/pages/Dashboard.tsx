@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useVaults } from '@/hooks/useVaults';
 import { useAuth } from '@/hooks/useAuth';
+import { useUIStore } from '@/store/uiStore';
 import { mockDashboardStats } from '@/data/mockData';
 import { cn } from '@/lib/utils';
 import { 
@@ -19,12 +21,15 @@ import {
   Bitcoin,
   Plane,
   Scale,
-  Crown
+  Crown,
+  Eye
 } from 'lucide-react';
 
 export const Dashboard: React.FC = () => {
   const { vaults, loading } = useVaults();
   const { user, isAuthenticated } = useAuth();
+  const { openLoginModal } = useUIStore();
+  const navigate = useNavigate();
 
   const stats = mockDashboardStats;
 
@@ -40,6 +45,27 @@ export const Dashboard: React.FC = () => {
     crypto: 'from-vault-crypto-DEFAULT to-premium-orange',
     aviation: 'from-vault-aviation-DEFAULT to-premium-cyan',
     balanced: 'from-vault-balanced-DEFAULT to-premium-purple',
+  };
+
+  const handleVaultDetails = (vaultId: string) => {
+    navigate(`/vault/${vaultId}`);
+  };
+
+  const handleVaultSubscribe = (vault: any) => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
+    
+    // Handle subscription logic here
+    console.log('Subscribing to vault:', vault.id);
+  };
+
+  const handleGetStarted = () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
   };
 
   if (loading) {
@@ -70,7 +96,10 @@ export const Dashboard: React.FC = () => {
             </p>
           </div>
           {!isAuthenticated && (
-            <Button className="bg-gradient-to-r from-vault-tech-DEFAULT to-premium-purple hover:from-vault-tech-dark hover:to-premium-purple/90 shadow-lg hover:shadow-xl transition-all duration-200">
+            <Button 
+              onClick={handleGetStarted}
+              className="bg-gradient-to-r from-vault-tech-DEFAULT to-premium-purple hover:from-vault-tech-dark hover:to-premium-purple/90 shadow-lg hover:shadow-xl transition-all duration-200"
+            >
               <Crown className="h-4 w-4 mr-2" />
               Get Started
             </Button>
@@ -78,12 +107,12 @@ export const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Stats Overview */}
+      {/* Stats Overview - More visible cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:border-primary/30 group">
+        <Card className="border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 transition-all duration-300 hover:border-primary/40 hover:shadow-lg group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">Total Vaults</CardTitle>
-            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-tech-DEFAULT to-premium-purple">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-tech-DEFAULT to-premium-purple shadow-md">
               <Briefcase className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
@@ -95,10 +124,10 @@ export const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:border-vault-crypto-DEFAULT/50 group">
+        <Card className="border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 transition-all duration-300 hover:border-vault-crypto-DEFAULT/50 hover:shadow-lg group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">Avg CAGR</CardTitle>
-            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-crypto-DEFAULT to-premium-orange">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-crypto-DEFAULT to-premium-orange shadow-md">
               <TrendingUp className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
@@ -112,10 +141,10 @@ export const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:border-vault-aviation-DEFAULT/50 group">
+        <Card className="border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 transition-all duration-300 hover:border-vault-aviation-DEFAULT/50 hover:shadow-lg group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">Subscribers</CardTitle>
-            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-aviation-DEFAULT to-premium-cyan">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-aviation-DEFAULT to-premium-cyan shadow-md">
               <Users className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
@@ -127,10 +156,10 @@ export const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:border-vault-balanced-DEFAULT/50 group">
+        <Card className="border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 transition-all duration-300 hover:border-vault-balanced-DEFAULT/50 hover:shadow-lg group">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">Best Performer</CardTitle>
-            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-balanced-DEFAULT to-premium-purple">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-vault-balanced-DEFAULT to-premium-purple shadow-md">
               <Target className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
@@ -143,7 +172,7 @@ export const Dashboard: React.FC = () => {
         </Card>
       </div>
 
-      {/* Featured Vaults */}
+      {/* Featured Vaults - More visible */}
       <div>
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -152,7 +181,7 @@ export const Dashboard: React.FC = () => {
               Premium curated investment strategies
             </p>
           </div>
-          <Button variant="outline" className="flex items-center space-x-2 border-border hover:border-primary/50 hover:bg-accent transition-all duration-200">
+          <Button variant="outline" className="flex items-center space-x-2 border-2 border-border/60 hover:border-primary/50 hover:bg-accent transition-all duration-200">
             <span>View All</span>
             <ArrowUpRight className="h-4 w-4" />
           </Button>
@@ -164,7 +193,10 @@ export const Dashboard: React.FC = () => {
             const gradient = vaultGradients[vault.category];
             
             return (
-              <Card key={vault.id} className="group hover:shadow-2xl transition-all duration-500 cursor-pointer border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/60 hover:border-primary/30">
+              <Card 
+                key={vault.id} 
+                className="group hover:shadow-2xl transition-all duration-500 border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 hover:border-primary/40"
+              >
                 <CardHeader className="pb-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-4">
@@ -244,31 +276,36 @@ export const Dashboard: React.FC = () => {
                         {vault.holdings.slice(0, 5).map((holding, index) => (
                           <div
                             key={holding.symbol}
-                            className="px-3 py-1.5 bg-muted/50 rounded-lg text-xs font-mono font-bold text-foreground hover:bg-muted transition-colors"
+                            className="px-3 py-1.5 bg-muted/80 border border-border/40 rounded-lg text-xs font-mono font-bold text-foreground hover:bg-muted hover:border-border/60 transition-colors"
                           >
                             {holding.symbol}
                           </div>
                         ))}
                         {vault.holdings.length > 5 && (
-                          <div className="px-3 py-1.5 bg-muted/30 rounded-lg text-xs text-muted-foreground">
+                          <div className="px-3 py-1.5 bg-muted/50 border border-border/30 rounded-lg text-xs text-muted-foreground">
                             +{vault.holdings.length - 5} more
                           </div>
-                          )}
+                        )}
                       </div>
                     </div>
                     
                     {/* Action Buttons */}
                     <div className="flex items-center space-x-3 pt-6">
-                      <Button className={cn(
-                        "flex-1 font-semibold shadow-lg hover:shadow-xl transition-all duration-300",
-                        `bg-gradient-to-r ${gradient} hover:scale-[1.02]`
-                      )}>
+                      <Button 
+                        onClick={() => handleVaultSubscribe(vault)}
+                        className={cn(
+                          "flex-1 font-semibold shadow-lg hover:shadow-xl transition-all duration-300",
+                          `bg-gradient-to-r ${gradient} hover:scale-[1.02]`
+                        )}
+                      >
                         Subscribe ${vault.monthlyFee}/mo
                       </Button>
                       <Button 
                         variant="outline" 
-                        className="px-6 border-border hover:border-primary/50 hover:bg-accent transition-all duration-200"
+                        onClick={() => handleVaultDetails(vault.id)}
+                        className="px-6 border-2 border-border/60 hover:border-primary/50 hover:bg-accent transition-all duration-200"
                       >
+                        <Eye className="h-4 w-4 mr-2" />
                         Details
                       </Button>
                     </div>
@@ -279,7 +316,7 @@ export const Dashboard: React.FC = () => {
                         <Badge 
                           key={tag} 
                           variant="outline" 
-                          className="text-xs border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground transition-all duration-200"
+                          className="text-xs border-border/60 bg-muted/30 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:bg-muted/50 transition-all duration-200"
                         >
                           {tag}
                         </Badge>
@@ -298,7 +335,10 @@ export const Dashboard: React.FC = () => {
         <div>
           <h3 className="text-2xl font-bold text-foreground mb-6">Quick Actions</h3>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/60 hover:border-vault-tech-DEFAULT/50 group">
+            <Card 
+              onClick={() => navigate('/performance')}
+              className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 hover:border-vault-tech-DEFAULT/50 group"
+            >
               <CardContent className="flex items-center space-x-4 p-6">
                 <div className="p-3 bg-gradient-to-br from-vault-tech-DEFAULT to-premium-purple rounded-xl group-hover:shadow-lg transition-all duration-300">
                   <TrendingUp className="h-6 w-6 text-white" />
@@ -310,7 +350,10 @@ export const Dashboard: React.FC = () => {
               </CardContent>
             </Card>
             
-            <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/60 hover:border-vault-aviation-DEFAULT/50 group">
+            <Card 
+              onClick={() => navigate('/my-vaults')}
+              className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 hover:border-vault-aviation-DEFAULT/50 group"
+            >
               <CardContent className="flex items-center space-x-4 p-6">
                 <div className="p-3 bg-gradient-to-br from-vault-aviation-DEFAULT to-premium-cyan rounded-xl group-hover:shadow-lg transition-all duration-300">
                   <Briefcase className="h-6 w-6 text-white" />
@@ -322,7 +365,10 @@ export const Dashboard: React.FC = () => {
               </CardContent>
             </Card>
             
-            <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/60 hover:border-vault-balanced-DEFAULT/50 group">
+            <Card 
+              onClick={() => navigate('/pricing')}
+              className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 hover:border-vault-balanced-DEFAULT/50 group"
+            >
               <CardContent className="flex items-center space-x-4 p-6">
                 <div className="p-3 bg-gradient-to-br from-vault-balanced-DEFAULT to-premium-purple rounded-xl group-hover:shadow-lg transition-all duration-300">
                   <Crown className="h-6 w-6 text-white" />
@@ -334,7 +380,10 @@ export const Dashboard: React.FC = () => {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-border/50 bg-card/30 backdrop-blur-sm hover:bg-card/60 hover:border-vault-crypto-DEFAULT/50 group">
+            <Card 
+              onClick={() => navigate('/analytics')}
+              className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-border/60 bg-card/80 backdrop-blur-sm hover:bg-card/90 hover:border-vault-crypto-DEFAULT/50 group"
+            >
               <CardContent className="flex items-center space-x-4 p-6">
                 <div className="p-3 bg-gradient-to-br from-vault-crypto-DEFAULT to-premium-orange rounded-xl group-hover:shadow-lg transition-all duration-300">
                   <Star className="h-6 w-6 text-white" />
@@ -351,7 +400,7 @@ export const Dashboard: React.FC = () => {
 
       {/* Premium Features Teaser */}
       {!isAuthenticated && (
-        <Card className="border-2 border-primary/20 bg-gradient-to-r from-card/50 to-primary/5 backdrop-blur-sm">
+        <Card className="border-2 border-primary/30 bg-gradient-to-r from-card/80 to-primary/10 backdrop-blur-sm shadow-lg">
           <CardContent className="p-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
@@ -382,6 +431,7 @@ export const Dashboard: React.FC = () => {
               <div className="text-right">
                 <Button 
                   size="lg"
+                  onClick={handleGetStarted}
                   className="bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
                 >
                   <Crown className="h-5 w-5 mr-2" />
