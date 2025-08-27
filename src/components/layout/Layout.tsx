@@ -32,7 +32,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const hasStatsBar = isAuthenticated && user;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header - Sticky at top with higher z-index */}
       <div className="sticky top-0 z-50">
         <Header />
@@ -84,7 +84,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Main content area - Responsive margins and spacing */}
       <main 
         className={cn(
-          "min-h-screen transition-all duration-300",
+          "min-h-screen transition-all duration-300 overflow-x-hidden",
           // Responsive left margin for sidebar
           "lg:ml-64", // Full sidebar width on large screens
           sidebarCollapsed && "lg:ml-16", // Collapsed sidebar width on large screens
@@ -96,7 +96,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         {/* Content wrapper with responsive constraints */}
         <div className={cn(
-          "w-full",
+          "w-full min-w-0", // min-w-0 prevents flex children from overflowing
           // Optional: Add max width for very large screens
           "max-w-none xl:max-w-7xl xl:mx-auto"
         )}>
