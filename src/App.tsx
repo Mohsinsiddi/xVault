@@ -11,6 +11,10 @@ import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 import { useAuthDemo } from '@/hooks/useAuth';
 
+// Import the authentication modals
+import { LoginModal } from '@/components/common/LoginModal';
+import { RegisterModal } from '@/components/common/RegisterModal';
+
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -28,9 +32,8 @@ function App() {
 
   // Apply theme to document on mount and theme changes
   useEffect(() => {
-    document.documentElement.className = 'dark';
-    setTheme('dark');
-  }, [setTheme]);
+    document.documentElement.className = theme;
+  }, [theme]);
 
   // Development helpers
   useEffect(() => {
@@ -39,12 +42,18 @@ function App() {
     if (isDev) {
       console.log('🚀 xVault MVP Development Mode');
       console.log('💡 Quick login: demo@xvault.com / password');
-      console.log('⌨️ Alt + L for quick demo login');
+      console.log('⌨️ Windows/Linux: Alt + L for quick demo login');
+      console.log('🍎 macOS: Option + L or Cmd + Shift + L for quick demo login');
+      console.log('🔧 Access window.xvault for debugging utilities');
       
       // Make auth functions available globally for debugging
       (window as any).xvault = {
         loginDemo,
-        theme,
+        shortcuts: {
+          'Alt + L (Win/Linux)': 'Quick demo login',
+          'Option + L (macOS)': 'Quick demo login',
+          'Cmd + Shift + L (macOS)': 'Quick demo login (alternative)',
+        },
       };
     }
   }, [loginDemo, theme]);
@@ -52,13 +61,27 @@ function App() {
   // Global keyboard shortcuts (development)
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Alt + L = Quick demo login
+      // Cross-platform quick demo login shortcuts
+      // Windows/Linux: Alt + L
+      // macOS: Option + L (Alt key on Mac is Option)
       if (e.altKey && e.key === 'l' && import.meta.env.DEV) {
         e.preventDefault();
         const { user } = useAuthStore.getState();
         if (!user) {
           loginDemo();
           console.log('🔐 Demo login triggered');
+        } else {
+          console.log('👤 Already logged in as:', user.name);
+        }
+      }
+      
+      // Additional macOS-specific shortcut: Cmd + Shift + L
+      if (e.metaKey && e.shiftKey && e.key === 'L' && import.meta.env.DEV) {
+        e.preventDefault();
+        const { user } = useAuthStore.getState();
+        if (!user) {
+          loginDemo();
+          console.log('🔐 Demo login triggered (macOS shortcut)');
         } else {
           console.log('👤 Already logged in as:', user.name);
         }
@@ -109,6 +132,10 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Layout>
+
+        {/* Authentication Modals - Always rendered but controlled by state */}
+        <LoginModal />
+        <RegisterModal />
 
         {/* Development indicator */}
         {import.meta.env.DEV && (
