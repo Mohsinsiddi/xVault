@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,9 @@ import {
   Scale,
   Crown,
   User,
-  CreditCard
+  CreditCard,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -33,6 +35,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
   const { openLoginModal, showNotification } = useUIStore();
   const location = useLocation();
   const navigate = useNavigate();
+
+  // State for collapsible vault categories
+  const [vaultCategoriesExpanded, setVaultCategoriesExpanded] = useState(true);
 
   const navigation = [
     {
@@ -140,6 +145,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
     navigate('/profile');
   };
 
+  const toggleVaultCategories = () => {
+    setVaultCategoriesExpanded(!vaultCategoriesExpanded);
+  };
+
   return (
     <div
       className={cn(
@@ -186,55 +195,96 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
           })}
         </div>
 
-        {/* Vault Categories */}
+        {/* Vault Categories with Collapsible Header */}
         {!collapsed && (
           <div className="pt-8">
-            <div className="px-3 pb-4">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                Vault Categories
-              </h3>
+            <div className="px-3 pb-2">
+              <button
+                onClick={toggleVaultCategories}
+                className="flex items-center justify-between w-full text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors py-2 rounded-lg hover:bg-accent/30"
+              >
+                <span>Vault Categories</span>
+                {vaultCategoriesExpanded ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
+                )}
+              </button>
             </div>
-            <div className="space-y-2">
-              {vaultCategories.map((category) => {
-                const Icon = category.icon;
-                return (
-                  <div
-                    key={category.name}
-                    className={cn(
-                      "rounded-xl border-2 border-transparent transition-all duration-200 overflow-hidden",
-                      "hover:border-border/50 hover:bg-accent/30 cursor-pointer"
-                    )}
-                    onClick={() => handleCategoryClick(category.category)}
-                  >
-                    <div className="w-full flex items-center space-x-3 p-3">
-                      <div className={cn(
-                        "p-2 rounded-lg",
-                        category.bgColor,
-                        `border ${category.borderColor}`
-                      )}>
-                        <Icon className={cn("h-4 w-4", category.color)} />
-                      </div>
-                      <div className="flex-1">
-                        <span className="text-sm font-medium text-foreground">{category.name}</span>
-                      </div>
-                      {category.count > 0 && (
-                        <Badge 
-                          variant="outline" 
-                          className={cn(
-                            "text-xs",
-                            category.borderColor,
-                            category.color,
-                            "bg-transparent"
-                          )}
-                        >
-                          {category.count}
-                        </Badge>
+
+            {/* Animated collapsible content */}
+            <div className={cn(
+              "overflow-hidden transition-all duration-300 ease-in-out",
+              vaultCategoriesExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            )}>
+              <div className="space-y-2 pb-2">
+                {vaultCategories.map((category) => {
+                  const Icon = category.icon;
+                  return (
+                    <div
+                      key={category.name}
+                      className={cn(
+                        "rounded-xl border-2 border-transparent transition-all duration-200 overflow-hidden",
+                        "hover:border-border/50 hover:bg-accent/30 cursor-pointer"
                       )}
+                      onClick={() => handleCategoryClick(category.category)}
+                    >
+                      <div className="w-full flex items-center space-x-3 p-3">
+                        <div className={cn(
+                          "p-2 rounded-lg",
+                          category.bgColor,
+                          `border ${category.borderColor}`
+                        )}>
+                          <Icon className={cn("h-4 w-4", category.color)} />
+                        </div>
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-foreground">{category.name}</span>
+                        </div>
+                        {category.count > 0 && (
+                          <Badge 
+                            variant="outline" 
+                            className={cn(
+                              "text-xs",
+                              category.borderColor,
+                              category.color,
+                              "bg-transparent"
+                            )}
+                          >
+                            {category.count}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
+
+            {/* Collapsed state indicator */}
+            {!vaultCategoriesExpanded && (
+              <div className="px-3 py-2">
+                <div className="flex items-center justify-center space-x-1">
+                  {vaultCategories.slice(0, 4).map((category) => {
+                    const Icon = category.icon;
+                    return (
+                      <div
+                        key={category.name}
+                        className={cn(
+                          "p-1.5 rounded-lg cursor-pointer",
+                          category.bgColor,
+                          `border ${category.borderColor}`,
+                          "hover:scale-110 transition-transform"
+                        )}
+                        onClick={() => handleCategoryClick(category.category)}
+                        title={category.name}
+                      >
+                        <Icon className={cn("h-3 w-3", category.color)} />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
 
