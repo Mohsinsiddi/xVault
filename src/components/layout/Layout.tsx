@@ -15,13 +15,15 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header - Fixed at top */}
-      <Header />
+      {/* Header - Sticky at top with higher z-index */}
+      <div className="sticky top-0 z-50">
+        <Header />
+      </div>
       
       {/* Sidebar - Fixed to left side, starts below header */}
       <aside 
         className={cn(
-          "fixed left-0 z-30 bg-card/50 border-r border-border backdrop-blur-sm transition-all duration-300",
+          "fixed left-0 z-40 bg-card/50 border-r border-border backdrop-blur-sm transition-all duration-300",
           "top-16 bottom-0", // From header to bottom of screen
           sidebarCollapsed ? "w-16" : "w-64"
         )}
@@ -35,7 +37,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Mobile overlay */}
       {!sidebarCollapsed && (
         <div 
-          className="fixed inset-0 bg-black/50 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
           style={{ top: '4rem' }} // Start below header
           onClick={() => setSidebarCollapsed(true)}
         />
@@ -45,7 +47,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main 
         className={cn(
           "min-h-screen transition-all duration-300",
-          "pt-16", // Top padding for header
+          "pt-0", // No top padding since header is sticky
           sidebarCollapsed ? "ml-16" : "ml-64" // Left margin for sidebar
         )}
       >

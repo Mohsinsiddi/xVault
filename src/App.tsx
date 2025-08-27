@@ -27,7 +27,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 function App() {
-  const { theme, setTheme } = useUIStore();
+  const { theme } = useUIStore();
   const { loginDemo } = useAuthDemo();
 
   // Apply theme to document on mount and theme changes
