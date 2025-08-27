@@ -32,80 +32,83 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const hasStatsBar = isAuthenticated && user;
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      {/* Header - Sticky at top with higher z-index */}
-      <div className="sticky top-0 z-50">
+    <div className="min-h-screen bg-background">
+      {/* Header - Fixed at top with higher z-index */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
         <Header />
-      </div>
+      </header>
       
-      {/* Sidebar - Responsive positioning and sizing */}
-      <aside 
+      {/* Main container with proper top margin for fixed header */}
+      <div 
         className={cn(
-          // Base styles
-          "fixed left-0 z-40 bg-card/50 border-r border-border backdrop-blur-sm transition-all duration-300",
-          // Responsive positioning - account for header + stats bar
-          hasStatsBar ? "top-[5.25rem]" : "top-16", // 84px vs 64px
-          "bottom-0", // Extend to bottom of screen
-          // Responsive width
-          sidebarCollapsed ? "w-16" : "w-64",
-          // Mobile handling - hide completely on small screens when collapsed
-          "lg:translate-x-0", // Always visible on large screens
-          sidebarCollapsed 
-            ? "max-lg:-translate-x-full" // Hide on mobile when collapsed
-            : "max-lg:translate-x-0" // Show on mobile when expanded
+          "flex min-h-screen",
+          // Top margin to account for fixed header
+          hasStatsBar ? "mt-[5.25rem]" : "mt-16" // 84px vs 64px
         )}
       >
-        {/* Sidebar content with responsive padding and scroll */}
-        <div className={cn(
-          "h-full overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
-          // Responsive top padding
-          "pt-3 lg:pt-2", // More padding on mobile for better spacing
-          // Responsive side padding
-          sidebarCollapsed ? "px-2" : "px-0"
-        )}>
-          <Sidebar collapsed={sidebarCollapsed} />
-        </div>
-      </aside>
-
-      {/* Mobile overlay - only show when sidebar is expanded on small screens */}
-      {!sidebarCollapsed && (
-        <div 
+        {/* Sidebar - Fixed positioning */}
+        <aside 
           className={cn(
-            "fixed inset-0 bg-black/50 z-30",
-            // Only show overlay on screens smaller than lg
-            "lg:hidden",
-            // Position below header including stats
-            hasStatsBar ? "top-[5.25rem]" : "top-16"
+            // Base styles with fixed positioning
+            "fixed left-0 z-40 bg-card/95 border-r border-border backdrop-blur-sm transition-all duration-300",
+            // Full height from current position
+            "h-full",
+            // Responsive width
+            sidebarCollapsed ? "w-16" : "w-64",
+            // Mobile handling
+            "lg:translate-x-0",
+            sidebarCollapsed 
+              ? "max-lg:-translate-x-full" 
+              : "max-lg:translate-x-0"
           )}
-          onClick={() => setSidebarCollapsed(true)}
-        />
-      )}
+          style={{
+            // Dynamic top positioning based on header height
+            top: hasStatsBar ? '5.25rem' : '4rem',
+            bottom: 0
+          }}
+        >
+          {/* Sidebar content with scroll */}
+          <div className={cn(
+            "h-full overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
+            "pt-3 lg:pt-2",
+            sidebarCollapsed ? "px-2" : "px-0"
+          )}>
+            <Sidebar collapsed={sidebarCollapsed} />
+          </div>
+        </aside>
 
-      {/* Main content area - Responsive margins and spacing */}
-      <main 
-        className={cn(
-          "min-h-screen transition-all duration-300 overflow-x-hidden",
-          // Responsive left margin for sidebar
-          "lg:ml-64", // Full sidebar width on large screens
-          sidebarCollapsed && "lg:ml-16", // Collapsed sidebar width on large screens
-          "ml-0", // No margin on mobile (sidebar overlays)
-          // Responsive padding
-          "p-4 sm:p-6", // Smaller padding on mobile
-          !sidebarCollapsed && "lg:pl-8" // Extra left padding when sidebar is expanded on desktop
+        {/* Mobile overlay */}
+        {!sidebarCollapsed && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            style={{
+              top: hasStatsBar ? '5.25rem' : '4rem'
+            }}
+            onClick={() => setSidebarCollapsed(true)}
+          />
         )}
-      >
-        {/* Content wrapper with responsive constraints */}
-        <div className={cn(
-          "w-full min-w-0", // min-w-0 prevents flex children from overflowing
-          // Optional: Add max width for very large screens
-          "max-w-none xl:max-w-7xl xl:mx-auto"
-        )}>
-          {children}
-        </div>
-        
-        {/* Footer at bottom of content */}
-        <Footer />
-      </main>
+
+        {/* Main content area with flex layout */}
+        <main 
+          className={cn(
+            "flex-1 min-w-0 overflow-x-hidden",
+            // Responsive left margin for sidebar
+            "lg:ml-64",
+            sidebarCollapsed && "lg:ml-16",
+            "ml-0",
+            // Content padding
+            "p-4 sm:p-6"
+          )}
+        >
+          {/* Content wrapper */}
+          <div className="w-full min-w-0 max-w-none xl:max-w-7xl xl:mx-auto">
+            {children}
+          </div>
+          
+          {/* Footer */}
+          <Footer />
+        </main>
+      </div>
 
       {/* Global Notification System */}
       <Notification />
