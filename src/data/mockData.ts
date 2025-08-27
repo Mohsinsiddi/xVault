@@ -179,6 +179,260 @@ export const mockDashboardStats: DashboardStats = {
   bestPerformer: 'vault-pure-crypto'
 };
 
+// Add these to your existing mockData.ts file
+
+// Performance Chart Data for VaultDetails
+export const mockPerformanceChartData = {
+  'vault-tech-crypto': [
+    { month: 'Jan 24', vault: 100, nasdaq: 100, sp500: 100 },
+    { month: 'Feb 24', vault: 105.2, nasdaq: 102.1, sp500: 101.8 },
+    { month: 'Mar 24', vault: 98.7, nasdaq: 99.8, sp500: 100.2 },
+    { month: 'Apr 24', vault: 112.4, nasdaq: 105.6, sp500: 104.9 },
+    { month: 'May 24', vault: 108.9, nasdaq: 107.2, sp500: 106.1 },
+    { month: 'Jun 24', vault: 115.6, nasdaq: 109.8, sp500: 108.3 },
+    { month: 'Jul 24', vault: 122.8, nasdaq: 112.3, sp500: 110.7 },
+    { month: 'Aug 24', vault: 119.3, nasdaq: 110.7, sp500: 109.4 },
+    { month: 'Sep 24', vault: 126.7, nasdaq: 114.5, sp500: 112.8 },
+    { month: 'Oct 24', vault: 118.9, nasdaq: 112.9, sp500: 111.6 },
+    { month: 'Nov 24', vault: 134.2, nasdaq: 117.8, sp500: 115.2 },
+    { month: 'Dec 24', vault: 124.5, nasdaq: 116.3, sp500: 114.8 }
+  ],
+  'vault-pure-crypto': [
+    { month: 'Jan 24', vault: 100, nasdaq: 100, sp500: 100 },
+    { month: 'Feb 24', vault: 118.5, nasdaq: 102.1, sp500: 101.8 },
+    { month: 'Mar 24', vault: 87.3, nasdaq: 99.8, sp500: 100.2 },
+    { month: 'Apr 24', vault: 142.7, nasdaq: 105.6, sp500: 104.9 },
+    { month: 'May 24', vault: 125.4, nasdaq: 107.2, sp500: 106.1 },
+    { month: 'Jun 24', vault: 156.8, nasdaq: 109.8, sp500: 108.3 },
+    { month: 'Jul 24', vault: 173.2, nasdaq: 112.3, sp500: 110.7 },
+    { month: 'Aug 24', vault: 151.9, nasdaq: 110.7, sp500: 109.4 },
+    { month: 'Sep 24', vault: 189.4, nasdaq: 114.5, sp500: 112.8 },
+    { month: 'Oct 24', vault: 162.1, nasdaq: 112.9, sp500: 111.6 },
+    { month: 'Nov 24', vault: 201.7, nasdaq: 117.8, sp500: 115.2 },
+    { month: 'Dec 24', vault: 145.8, nasdaq: 116.3, sp500: 114.8 }
+  ],
+  'vault-aviation': [
+    { month: 'Jan 24', vault: 100, nasdaq: 100, sp500: 100 },
+    { month: 'Feb 24', vault: 103.4, nasdaq: 102.1, sp500: 101.8 },
+    { month: 'Mar 24', vault: 106.2, nasdaq: 99.8, sp500: 100.2 },
+    { month: 'Apr 24', vault: 109.8, nasdaq: 105.6, sp500: 104.9 },
+    { month: 'May 24', vault: 107.1, nasdaq: 107.2, sp500: 106.1 },
+    { month: 'Jun 24', vault: 111.5, nasdaq: 109.8, sp500: 108.3 },
+    { month: 'Jul 24', vault: 114.7, nasdaq: 112.3, sp500: 110.7 },
+    { month: 'Aug 24', vault: 112.3, nasdaq: 110.7, sp500: 109.4 },
+    { month: 'Sep 24', vault: 116.9, nasdaq: 114.5, sp500: 112.8 },
+    { month: 'Oct 24', vault: 113.2, nasdaq: 112.9, sp500: 111.6 },
+    { month: 'Nov 24', vault: 119.4, nasdaq: 117.8, sp500: 115.2 },
+    { month: 'Dec 24', vault: 118.3, nasdaq: 116.3, sp500: 114.8 }
+  ],
+  'vault-balanced': [
+    { month: 'Jan 24', vault: 100, nasdaq: 100, sp500: 100 },
+    { month: 'Feb 24', vault: 102.8, nasdaq: 102.1, sp500: 101.8 },
+    { month: 'Mar 24', vault: 101.4, nasdaq: 99.8, sp500: 100.2 },
+    { month: 'Apr 24', vault: 106.3, nasdaq: 105.6, sp500: 104.9 },
+    { month: 'May 24', vault: 108.1, nasdaq: 107.2, sp500: 106.1 },
+    { month: 'Jun 24', vault: 110.7, nasdaq: 109.8, sp500: 108.3 },
+    { month: 'Jul 24', vault: 113.2, nasdaq: 112.3, sp500: 110.7 },
+    { month: 'Aug 24', vault: 111.8, nasdaq: 110.7, sp500: 109.4 },
+    { month: 'Sep 24', vault: 114.9, nasdaq: 114.5, sp500: 112.8 },
+    { month: 'Oct 24', vault: 113.1, nasdaq: 112.9, sp500: 111.6 },
+    { month: 'Nov 24', vault: 117.3, nasdaq: 117.8, sp500: 115.2 },
+    { month: 'Dec 24', vault: 116.7, nasdaq: 116.3, sp500: 114.8 }
+  ]
+};
+
+// Risk Metrics for each vault
+export const mockRiskMetrics = {
+  'vault-tech-crypto': {
+    sharpeRatio: 1.45,
+    maxDrawdown: -18.7,
+    volatility: 22.3,
+    beta: 1.32,
+    alpha: 8.2,
+    sortino: 1.89
+  },
+  'vault-pure-crypto': {
+    sharpeRatio: 1.12,
+    maxDrawdown: -35.4,
+    volatility: 45.6,
+    beta: 0.85,
+    alpha: 32.1,
+    sortino: 1.34
+  },
+  'vault-aviation': {
+    sharpeRatio: 1.23,
+    maxDrawdown: -12.4,
+    volatility: 16.8,
+    beta: 1.12,
+    alpha: 2.1,
+    sortino: 1.67
+  },
+  'vault-balanced': {
+    sharpeRatio: 1.34,
+    maxDrawdown: -9.8,
+    volatility: 14.2,
+    beta: 0.89,
+    alpha: 0.4,
+    sortino: 1.78
+  }
+};
+
+// Monthly returns data for detailed analysis
+export const mockMonthlyReturns = {
+  'vault-tech-crypto': [
+    { month: 'Jan 24', return: 5.2 },
+    { month: 'Feb 24', return: -6.2 },
+    { month: 'Mar 24', return: 13.9 },
+    { month: 'Apr 24', return: -3.1 },
+    { month: 'May 24', return: 6.1 },
+    { month: 'Jun 24', return: 6.2 },
+    { month: 'Jul 24', return: -2.9 },
+    { month: 'Aug 24', return: 6.2 },
+    { month: 'Sep 24', return: -6.1 },
+    { month: 'Oct 24', return: 12.9 },
+    { month: 'Nov 24', return: -7.2 },
+    { month: 'Dec 24', return: 0.0 }
+  ]
+};
+
+// Detailed vault descriptions for VaultDetails page
+export const vaultDetailedDescriptions = {
+  'vault-tech-crypto': `This premium vault combines the stability of established technology giants with the growth potential of cryptocurrency. Our strategy focuses on FAANG stocks complemented by Bitcoin exposure for maximum diversification benefits.
+
+The vault maintains a 90% equity allocation with leading technology companies, while the remaining 10% is allocated to Bitcoin as a hedge against inflation and currency debasuation. This approach has consistently outperformed traditional tech-only portfolios.
+
+Rebalancing occurs monthly to maintain optimal allocations, with dynamic adjustments based on market volatility and momentum indicators.`,
+
+  'vault-pure-crypto': `A concentrated cryptocurrency portfolio designed for investors seeking maximum exposure to digital assets. This vault employs a strategic mix of established cryptocurrencies and promising altcoins.
+
+Our research-driven approach focuses on fundamental analysis of blockchain projects, tokenomics, and adoption metrics. The portfolio is rebalanced weekly to capture momentum while managing downside risk through systematic stop-losses.
+
+This vault is suitable for experienced investors with high risk tolerance and strong conviction in the long-term potential of cryptocurrency markets.`,
+
+  'vault-aviation': `Focused on the aerospace and aviation sector recovery, this vault provides exposure to commercial airlines, aircraft manufacturers, and defense contractors. Our thesis centers on the post-pandemic recovery and long-term growth in air travel demand.
+
+The portfolio includes established players like Boeing and Lockheed Martin, complemented by airline stocks positioned for recovery. We also maintain exposure to emerging technologies in electric aircraft and urban air mobility.
+
+Regular sector rotation based on economic indicators and travel demand data ensures optimal positioning throughout different market cycles.`,
+
+  'vault-balanced': `A diversified portfolio designed for long-term wealth preservation and steady growth. This vault combines growth stocks, dividend aristocrats, cryptocurrency, and alternative investments for optimal risk-adjusted returns.
+
+Our asset allocation model dynamically adjusts based on market conditions, maintaining exposure across technology, healthcare, financials, and consumer staples. The cryptocurrency allocation provides inflation protection and portfolio diversification benefits.
+
+This vault is ideal for investors seeking steady returns with moderate risk, suitable for retirement planning and wealth preservation strategies.`
+};
+
+// Vault manager information
+export const vaultManagers = {
+  'vault-tech-crypto': {
+    name: 'Sarah Chen',
+    title: 'Senior Portfolio Manager',
+    experience: '12 years',
+    background: 'Former Goldman Sachs tech analyst with expertise in growth investing',
+    avatar: 'https://avatar.vercel.sh/sarah-chen'
+  },
+  'vault-pure-crypto': {
+    name: 'Marcus Rodriguez', 
+    title: 'Cryptocurrency Strategist',
+    experience: '8 years',
+    background: 'Early Bitcoin adopter, former Coinbase institutional sales director',
+    avatar: 'https://avatar.vercel.sh/marcus-rodriguez'
+  },
+  'vault-aviation': {
+    name: 'David Thompson',
+    title: 'Sector Specialist',
+    experience: '15 years',
+    background: 'Aerospace industry veteran, former Boeing financial analyst',
+    avatar: 'https://avatar.vercel.sh/david-thompson'
+  },
+  'vault-balanced': {
+    name: 'Lisa Park',
+    title: 'Chief Investment Officer',
+    experience: '18 years',
+    background: 'Former Vanguard portfolio manager specializing in asset allocation',
+    avatar: 'https://avatar.vercel.sh/lisa-park'
+  }
+};
+
+// Key insights and recent updates for each vault
+export const vaultInsights = {
+  'vault-tech-crypto': [
+    {
+      date: '2024-12-15',
+      title: 'Q4 Tech Earnings Preview',
+      content: 'Strong AI growth expected to drive NVIDIA and Microsoft earnings. Bitcoin allocation increased to 12% on institutional adoption trends.'
+    },
+    {
+      date: '2024-11-28',
+      title: 'Portfolio Rebalancing',
+      content: 'Reduced Apple allocation by 3% to capture Google AI momentum. Maintained defensive cash position at 5%.'
+    }
+  ],
+  'vault-pure-crypto': [
+    {
+      date: '2024-12-18',
+      title: 'Bitcoin ETF Impact',
+      content: 'Spot Bitcoin ETF approvals driving institutional inflows. Increased BTC allocation to 45% on momentum.'
+    },
+    {
+      date: '2024-12-01',
+      title: 'Altcoin Rotation',
+      content: 'Added Solana position on ecosystem growth. Reduced Ethereum exposure ahead of potential selling pressure.'
+    }
+  ],
+  'vault-aviation': [
+    {
+      date: '2024-12-10',
+      title: 'Travel Demand Recovery',
+      content: 'International travel returning to pre-pandemic levels. Increased airline exposure by 5%.'
+    },
+    {
+      date: '2024-11-22',
+      title: 'Defense Spending',
+      content: 'Geopolitical tensions supporting defense contractor valuations. Maintaining overweight LMT and RTX positions.'
+    }
+  ],
+  'vault-balanced': [
+    {
+      date: '2024-12-12',
+      title: 'Defensive Positioning',
+      content: 'Added healthcare and consumer staples exposure ahead of potential economic slowdown. Maintaining 15% crypto allocation.'
+    },
+    {
+      date: '2024-11-30',
+      title: 'Dividend Strategy',
+      content: 'Focused on dividend aristocrats for income generation. Current yield at 2.8% with growth potential.'
+    }
+  ]
+};
+
+// Type-safe utility functions with proper key checking
+
+// Utility function to get performance chart data by vault ID
+export const getPerformanceChartData = (vaultId: string) => {
+  return mockPerformanceChartData[vaultId as keyof typeof mockPerformanceChartData] || mockPerformanceChartData['vault-tech-crypto'];
+};
+
+// Utility function to get risk metrics by vault ID
+export const getRiskMetrics = (vaultId: string) => {
+  return mockRiskMetrics[vaultId as keyof typeof mockRiskMetrics] || mockRiskMetrics['vault-tech-crypto'];
+};
+
+// Utility function to get detailed description by vault ID
+export const getDetailedDescription = (vaultId: string) => {
+  return vaultDetailedDescriptions[vaultId as keyof typeof vaultDetailedDescriptions] || vaultDetailedDescriptions['vault-tech-crypto'];
+};
+
+// Utility function to get vault manager by vault ID
+export const getVaultManager = (vaultId: string) => {
+  return vaultManagers[vaultId as keyof typeof vaultManagers] || vaultManagers['vault-tech-crypto'];
+};
+
+// Utility function to get vault insights by vault ID
+export const getVaultInsights = (vaultId: string) => {
+  return vaultInsights[vaultId as keyof typeof vaultInsights] || vaultInsights['vault-tech-crypto'];
+};
+
 // Utility function to get vault by ID
 export const getVaultById = (id: string): Vault | undefined => {
   return mockVaults.find(vault => vault.id === id);

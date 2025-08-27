@@ -1,8 +1,10 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useVaults } from '@/hooks/useVaults';
 import { useAuth } from '@/hooks/useAuth';
+import { useUIStore } from '@/store/uiStore';
 import { cn } from '@/lib/utils';
 import { 
   LayoutDashboard,
@@ -28,33 +30,39 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
   const { vaults } = useVaults();
   const { user, isAuthenticated } = useAuth();
+  const { openLoginModal, showNotification } = useUIStore();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const navigation = [
     {
       name: 'Dashboard',
-      href: '#',
+      href: '/',
       icon: LayoutDashboard,
-      current: true,
+      current: location.pathname === '/',
     },
     {
       name: 'My Vaults',
-      href: '#',
+      href: '/my-vaults',
       icon: Briefcase,
-      current: false,
+      current: location.pathname === '/my-vaults',
       badge: user?.subscribedVaults.length || 0,
+      protected: true,
     },
     {
       name: 'Performance',
-      href: '#',
+      href: '/performance',
       icon: TrendingUp,
-      current: false,
+      current: location.pathname === '/performance',
+      protected: true,
     },
     {
       name: 'Analytics',
-      href: '#',
+      href: '/analytics',
       icon: PieChart,
-      current: false,
+      current: location.pathname === '/analytics',
       premium: true,
+      protected: true,
     },
   ];
 
@@ -97,10 +105,40 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
     },
   ];
 
-  const secondaryNavigation = [
-    { name: 'Settings', href: '#', icon: Settings },
-    { name: 'Help', href: '#', icon: HelpCircle },
-  ];
+  const handleNavClick = (item: typeof navigation[0]) => {
+    console.log('Navigation clicked:', item.name, 'Protected:', item.protected, 'Authenticated:', isAuthenticated);
+    
+    if (item.protected && !isAuthenticated) {
+      console.log('Opening login modal for protected route');
+      openLoginModal();
+      showNotification('Please login to access this feature', 'info');
+      return;
+    }
+    
+    if (item.premium && user?.plan === 'free') {
+      console.log('Redirecting to pricing for premium feature');
+      showNotification('Upgrade to access premium features', 'info');
+      navigate('/pricing');
+      return;
+    }
+    
+    console.log('Navigating to:', item.href);
+    navigate(item.href);
+  };
+
+  const handleCategoryClick = (category: string) => {
+    console.log('Category clicked:', category);
+    navigate(`/?category=${category}`);
+  };
+
+  const handleSettingsClick = () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      showNotification('Please login to access settings', 'info');
+      return;
+    }
+    navigate('/profile');
+  };
 
   return (
     <div
@@ -120,14 +158,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                 key={item.name}
                 variant={item.current ? "default" : "ghost"}
                 className={cn(
-                  "w-full justify-start h-11 rounded-xl transition-all duration-200",
+                  "w-full justify-start h-11 rounded-xl transition-all duration-200 cursor-pointer",
                   collapsed && "px-3 justify-center",
                   item.current 
                     ? "bg-primary/10 text-primary border border-primary/20 shadow-sm" 
                     : "text-muted-foreground hover:text-foreground hover:bg-accent/50 border border-transparent hover:border-border/50",
                   item.premium && user?.plan === 'free' && "opacity-60"
                 )}
-                disabled={item.premium && user?.plan === 'free'}
+                onClick={() => handleNavClick(item)}
               >
                 <Icon className={cn("h-5 w-5", collapsed ? "" : "mr-3")} />
                 {!collapsed && (
@@ -166,26 +204,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                       "rounded-xl border-2 border-transparent transition-all duration-200 overflow-hidden",
                       "hover:border-border/50 hover:bg-accent/30 cursor-pointer"
                     )}
+                    onClick={() => handleCategoryClick(category.category)}
                   >
-                    <Button
-                      variant="ghost"
-                      className="w-full justify-start h-12 rounded-xl border-none hover:bg-transparent"
-                    >
+                    <div className="w-full flex items-center space-x-3 p-3">
                       <div className={cn(
-                        "p-2 rounded-lg mr-3",
+                        "p-2 rounded-lg",
                         category.bgColor,
                         `border ${category.borderColor}`
                       )}>
                         <Icon className={cn("h-4 w-4", category.color)} />
                       </div>
-                      <div className="flex-1 text-left">
+                      <div className="flex-1">
                         <span className="text-sm font-medium text-foreground">{category.name}</span>
                       </div>
                       {category.count > 0 && (
                         <Badge 
                           variant="outline" 
                           className={cn(
-                            "ml-auto text-xs",
+                            "text-xs",
                             category.borderColor,
                             category.color,
                             "bg-transparent"
@@ -194,7 +230,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                           {category.count}
                         </Badge>
                       )}
-                    </Button>
+                    </div>
                   </div>
                 );
               })}
@@ -266,6 +302,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                   <Button 
                     size="sm" 
                     className="w-full bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 text-white border border-primary/20"
+                    onClick={() => navigate('/pricing')}
                   >
                     <Crown className="h-3 w-3 mr-2" />
                     Upgrade Plan
@@ -280,30 +317,40 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
       {/* Bottom Navigation */}
       <div className="border-t-2 border-border/60 p-4 mt-auto">
         <div className="space-y-1">
-          {secondaryNavigation.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Button
-                key={item.name}
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start h-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200",
-                  collapsed && "px-3 justify-center"
-                )}
-              >
-                <Icon className={cn("h-5 w-5", collapsed ? "" : "mr-3")} />
-                {!collapsed && <span className="font-medium">{item.name}</span>}
-              </Button>
-            );
-          })}
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full justify-start h-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200",
+              collapsed && "px-3 justify-center"
+            )}
+            onClick={handleSettingsClick}
+          >
+            <Settings className={cn("h-5 w-5", collapsed ? "" : "mr-3")} />
+            {!collapsed && <span className="font-medium">Settings</span>}
+          </Button>
+          
+          <Button
+            variant="ghost"
+            className={cn(
+              "w-full justify-start h-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all duration-200",
+              collapsed && "px-3 justify-center"
+            )}
+            onClick={() => window.open('https://help.xvault.com', '_blank')}
+          >
+            <HelpCircle className={cn("h-5 w-5", collapsed ? "" : "mr-3")} />
+            {!collapsed && <span className="font-medium">Help</span>}
+          </Button>
         </div>
         
         {/* Collapsed User Avatar */}
         {collapsed && isAuthenticated && (
           <div className="mt-4 flex justify-center">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-premium-purple flex items-center justify-center border border-primary/20">
+            <button
+              onClick={() => navigate('/profile')}
+              className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-premium-purple flex items-center justify-center border border-primary/20 hover:border-primary/40 transition-colors"
+            >
               <User className="h-4 w-4 text-white" />
-            </div>
+            </button>
           </div>
         )}
       </div>
