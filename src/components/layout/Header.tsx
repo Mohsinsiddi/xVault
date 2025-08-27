@@ -92,7 +92,7 @@ export const Header: React.FC = () => {
     <header className="sticky top-0 z-40 w-full border-b-2 border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 overflow-hidden">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 min-w-0">
         {/* Left Section */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2">
           {/* Sidebar Toggle */}
           <Button
             variant="ghost"
@@ -108,10 +108,7 @@ export const Header: React.FC = () => {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-vault-tech-DEFAULT to-premium-purple shadow-lg ring-2 ring-primary/20">
               <VaultLogo className="h-6 w-6 text-white" />
             </div>
-            <div className={cn(
-              "transition-all duration-300",
-              sidebarCollapsed ? "block" : "hidden sm:block"
-            )}>
+            <div className="block">
               <h1 className="text-xl font-bold text-transparent bg-gradient-to-r from-primary to-violet-500 bg-clip-text">
                 xVaultzz
               </h1>
