@@ -11,7 +11,6 @@ import {
   LogOut, 
   Bell,
   Search,
-  ChevronDown,
   CreditCard,
   BarChart3,
   MoreVertical,
@@ -137,7 +136,7 @@ export const Header: React.FC = () => {
         <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
           {isAuthenticated ? (
             <>
-              {/* Desktop View - Full Controls */}
+              {/* Desktop View - Simple Profile Display */}
               <div className="hidden lg:flex items-center space-x-3">
                 {/* Notifications */}
                 <Button variant="ghost" size="icon" className="relative hover:bg-accent/80 border border-transparent hover:border-border/50">
@@ -150,9 +149,16 @@ export const Header: React.FC = () => {
                   </Badge>
                 </Button>
 
-                {/* User Menu */}
-                <div className="flex items-center space-x-4">
-                  {/* User Info Display */}
+                {/* User Profile Display */}
+                <div className="flex items-center space-x-3 px-3 py-2 bg-card/30 rounded-xl border border-border/40">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-br from-premium-purple to-premium-pink flex items-center justify-center ring-2 ring-primary/20 shadow-md">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt={user.name} className="h-8 w-8 rounded-full" />
+                    ) : (
+                      <User className="h-4 w-4 text-white" />
+                    )}
+                  </div>
+                  
                   <div className={cn(
                     "text-right transition-all duration-300",
                     sidebarCollapsed ? "hidden xl:block" : "hidden lg:block"
@@ -170,56 +176,6 @@ export const Header: React.FC = () => {
                         {user?.plan} Plan
                       </p>
                     </div>
-                  </div>
-                  
-                  {/* Profile Menu Button */}
-                  <Button
-                    variant="ghost"
-                    className="flex items-center space-x-3 px-3 hover:bg-accent/80 rounded-xl border border-transparent hover:border-border/50 transition-all duration-200"
-                    onClick={handleProfileClick}
-                  >
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-br from-premium-purple to-premium-pink flex items-center justify-center ring-2 ring-primary/20 shadow-md">
-                      {user?.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="h-8 w-8 rounded-full" />
-                      ) : (
-                        <User className="h-4 w-4 text-white" />
-                      )}
-                    </div>
-                    <ChevronDown className={cn(
-                      "h-4 w-4 transition-all duration-300",
-                      sidebarCollapsed ? "hidden xl:block" : "hidden sm:block"
-                    )} />
-                  </Button>
-
-                  {/* Quick Actions */}
-                  <div className="flex items-center space-x-1 border-l-2 border-border/60 pl-3">
-                    {/* Upgrade Button for non-premium users */}
-                    {user?.plan === 'free' && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleUpgradeClick}
-                        className={cn(
-                          "bg-gradient-to-r from-primary/10 to-premium-purple/10 border-primary/30 text-primary hover:bg-gradient-to-r hover:from-primary/20 hover:to-premium-purple/20 transition-all duration-200",
-                          sidebarCollapsed ? "hidden xl:flex" : "hidden lg:flex"
-                        )}
-                      >
-                        <CreditCard className="h-4 w-4 mr-2" />
-                        Upgrade
-                      </Button>
-                    )}
-                    
-                    <Button variant="ghost" size="icon" className="hover:bg-accent/80 border border-transparent hover:border-border/50">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={logout}
-                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/30"
-                    >
-                      <LogOut className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               </div>

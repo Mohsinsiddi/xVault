@@ -30,6 +30,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   // Calculate header height dynamically based on whether stats bar is shown
   const hasStatsBar = isAuthenticated && user;
+  const headerHeight = hasStatsBar ? '5.25rem' : '4rem';
 
   return (
     <div className="min-h-screen bg-background">
@@ -50,9 +51,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <aside 
           className={cn(
             // Base styles with fixed positioning
-            "fixed left-0 z-40 bg-card/95 border-r border-border backdrop-blur-sm transition-all duration-300",
-            // Full height from current position
-            "h-full",
+            "fixed left-0 z-40 bg-card/95 border-r border-border backdrop-blur-sm transition-all duration-300 flex flex-col",
             // Responsive width
             sidebarCollapsed ? "w-16" : "w-64",
             // Mobile handling
@@ -63,13 +62,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           )}
           style={{
             // Dynamic top positioning based on header height
-            top: hasStatsBar ? '5.25rem' : '4rem',
-            bottom: 0
+            top: headerHeight,
+            // Calculate height properly: full viewport height minus header height
+            height: `calc(100vh - ${headerHeight})`
           }}
         >
-          {/* Sidebar content with scroll */}
+          {/* Sidebar content with scroll - now uses flex-1 and min-h-0 for proper scrolling */}
           <div className={cn(
-            "h-full overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
+            "flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent",
             "pt-3 lg:pt-2",
             sidebarCollapsed ? "px-2" : "px-0"
           )}>
@@ -82,7 +82,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           <div 
             className="fixed inset-0 bg-black/50 z-30 lg:hidden"
             style={{
-              top: hasStatsBar ? '5.25rem' : '4rem'
+              top: headerHeight
             }}
             onClick={() => setSidebarCollapsed(true)}
           />

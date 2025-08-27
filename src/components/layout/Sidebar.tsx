@@ -22,7 +22,8 @@ import {
   User,
   CreditCard,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -31,7 +32,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
   const { vaults } = useVaults();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const { openLoginModal, showNotification } = useUIStore();
   const location = useLocation();
   const navigate = useNavigate();
@@ -145,6 +146,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
     navigate('/profile');
   };
 
+  const handleProfileClick = () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      showNotification('Please login to access your profile', 'info');
+      return;
+    }
+    navigate('/profile');
+  };
+
+  const handleLogoutClick = () => {
+    logout();
+    navigate('/');
+    showNotification('Logged out successfully', 'success');
+  };
+
   const toggleVaultCategories = () => {
     setVaultCategoriesExpanded(!vaultCategoriesExpanded);
   };
@@ -152,7 +168,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
   return (
     <div
       className={cn(
-        "h-full bg-card/50 backdrop-blur-sm border-r-2 border-border/80 transition-all duration-300",
+        "h-full bg-card/50 backdrop-blur-sm border-r-2 border-border/80 transition-all duration-300 flex flex-col",
         collapsed ? "w-16" : "w-64"
       )}
     >
@@ -290,11 +306,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
 
         {/* User Stats Card */}
         {!collapsed && isAuthenticated && (
-          <div className="pt-8">
+          <div className="pt-6">
             <div className="p-4 bg-card/80 rounded-2xl border-2 border-border/60 backdrop-blur-sm">
-              <div className="flex items-center space-x-3 mb-4">
+              <div className="flex items-center space-x-3 mb-3">
                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-premium-purple flex items-center justify-center border-2 border-primary/20">
-                  <User className="h-5 w-5 text-white" />
+                  {user?.avatar ? (
+                    <img src={user.avatar} alt={user.name} className="h-10 w-10 rounded-full" />
+                  ) : (
+                    <User className="h-5 w-5 text-white" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-sm font-semibold text-foreground truncate">
@@ -315,7 +335,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                 </div>
               </div>
               
-              <div className="space-y-3 text-sm">
+              <div className="space-y-2 text-sm mb-3">
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Total Invested</span>
                   <span className="font-semibold text-foreground">
@@ -331,7 +351,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                     {(user?.totalReturns || 0) >= 0 ? '+' : ''}${user?.totalReturns.toLocaleString()}
                   </span>
                 </div>
-                <div className="pt-2 border-t border-border/50">
+                <div className="pt-1 border-t border-border/50">
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Return %</span>
                     <span className={cn(
@@ -347,26 +367,37 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
                 </div>
               </div>
 
-              {user?.plan === 'free' && (
-                <div className="mt-4 pt-3 border-t border-border/50">
+              {/* Profile Actions */}
+              <div className="space-y-1 border-t border-border/50 pt-2">
+                <Button 
+                  variant="ghost"
+                  size="sm" 
+                  className="w-full justify-start h-8 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-lg"
+                  onClick={handleProfileClick}
+                >
+                  <User className="h-3 w-3 mr-2" />
+                  Profile
+                </Button>
+                
+                {user?.plan === 'free' && (
                   <Button 
                     size="sm" 
-                    className="w-full bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 text-white border border-primary/20"
+                    className="w-full justify-start h-8 bg-gradient-to-r from-primary/10 to-premium-purple/10 border border-primary/30 text-primary hover:bg-gradient-to-r hover:from-primary/20 hover:to-premium-purple/20 text-xs font-medium rounded-lg"
                     onClick={() => navigate('/pricing')}
                   >
                     <Crown className="h-3 w-3 mr-2" />
                     Upgrade Plan
                   </Button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}
       </nav>
 
       {/* Bottom Navigation */}
-      <div className="border-t-2 border-border/60 p-4 mt-auto">
-        <div className="space-y-1">
+      <div className="border-t-2 border-border/60 p-4">
+        <div className="space-y-2">
           <Button
             variant="ghost"
             className={cn(
@@ -390,17 +421,69 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
             <HelpCircle className={cn("h-5 w-5", collapsed ? "" : "mr-3")} />
             {!collapsed && <span className="font-medium">Help</span>}
           </Button>
+
+          {/* Sign Out Button - Always visible when authenticated */}
+          {isAuthenticated && (
+            <Button
+              variant="ghost"
+              className={cn(
+                "w-full justify-start h-10 rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/30 transition-all duration-200",
+                collapsed && "px-3 justify-center"
+              )}
+              onClick={handleLogoutClick}
+            >
+              <LogOut className={cn("h-5 w-5", collapsed ? "" : "mr-3")} />
+              {!collapsed && <span className="font-medium">Sign Out</span>}
+            </Button>
+          )}
         </div>
         
-        {/* Collapsed User Avatar */}
+        {/* Collapsed User Avatar with Actions */}
         {collapsed && isAuthenticated && (
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 space-y-2 flex flex-col items-center">
             <button
-              onClick={() => navigate('/profile')}
+              onClick={handleProfileClick}
               className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-premium-purple flex items-center justify-center border border-primary/20 hover:border-primary/40 transition-colors"
+              title="Profile"
             >
-              <User className="h-4 w-4 text-white" />
+              {user?.avatar ? (
+                <img src={user.avatar} alt={user.name} className="h-8 w-8 rounded-full" />
+              ) : (
+                <User className="h-4 w-4 text-white" />
+              )}
             </button>
+            
+            {user?.plan === 'free' && (
+              <button
+                onClick={() => navigate('/pricing')}
+                className="h-6 w-6 rounded-lg bg-gradient-to-r from-primary/20 to-premium-purple/20 border border-primary/30 flex items-center justify-center hover:from-primary/30 hover:to-premium-purple/30 transition-colors"
+                title="Upgrade Plan"
+              >
+                <Crown className="h-3 w-3 text-primary" />
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Login Button for Non-Authenticated Users */}
+        {!isAuthenticated && (
+          <div className="mt-4">
+            <Button
+              onClick={openLoginModal}
+              className={cn(
+                "w-full bg-gradient-to-r from-vault-tech-DEFAULT to-premium-purple hover:from-vault-tech-dark hover:to-premium-purple/90 text-white font-medium text-sm",
+                collapsed ? "h-10 px-3" : "h-10 px-4"
+              )}
+            >
+              {collapsed ? (
+                <User className="h-5 w-5" />
+              ) : (
+                <>
+                  <User className="h-4 w-4 mr-2" />
+                  Sign In
+                </>
+              )}
+            </Button>
           </div>
         )}
       </div>
