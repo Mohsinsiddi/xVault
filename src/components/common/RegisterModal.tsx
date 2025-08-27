@@ -85,20 +85,20 @@ export const RegisterModal: React.FC = () => {
 
   return (
     <Dialog open={isRegisterModalOpen} onOpenChange={closeRegisterModal}>
-      <DialogContent className="sm:max-w-md bg-card border-border max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 rounded-2xl bg-gradient-to-br from-primary to-premium-purple flex items-center justify-center">
-            <Crown className="h-6 w-6 text-white" />
+      <DialogContent className="sm:max-w-[440px] max-h-[90vh] overflow-y-auto bg-card border-border">
+        <DialogHeader className="text-center space-y-3">
+          <div className="mx-auto h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-premium-purple flex items-center justify-center">
+            <Crown className="h-5 w-5 text-white" />
           </div>
-          <DialogTitle className="text-2xl font-bold text-foreground">
+          <DialogTitle className="text-xl font-bold text-foreground">
             Join xVault
           </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-sm text-muted-foreground">
             Create your account to start investing with premium vaults
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           {/* Name Field */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">Full Name</label>
@@ -110,7 +110,7 @@ export const RegisterModal: React.FC = () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className={cn(
-                  "pl-10",
+                  "pl-10 h-10",
                   errors.name && "border-destructive focus:border-destructive"
                 )}
                 disabled={loading}
@@ -132,7 +132,7 @@ export const RegisterModal: React.FC = () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className={cn(
-                  "pl-10",
+                  "pl-10 h-10",
                   errors.email && "border-destructive focus:border-destructive"
                 )}
                 disabled={loading}
@@ -154,7 +154,7 @@ export const RegisterModal: React.FC = () => {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className={cn(
-                  "pl-10 pr-10",
+                  "pl-10 pr-10 h-10",
                   errors.password && "border-destructive focus:border-destructive"
                 )}
                 disabled={loading}
@@ -163,7 +163,7 @@ export const RegisterModal: React.FC = () => {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                className="absolute right-0 top-0 h-10 px-3 hover:bg-transparent"
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={loading}
               >
@@ -198,7 +198,7 @@ export const RegisterModal: React.FC = () => {
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 className={cn(
-                  "pl-10 pr-10",
+                  "pl-10 pr-10 h-10",
                   errors.confirmPassword && "border-destructive focus:border-destructive"
                 )}
                 disabled={loading}
@@ -207,7 +207,7 @@ export const RegisterModal: React.FC = () => {
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                className="absolute right-0 top-0 h-10 px-3 hover:bg-transparent"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 disabled={loading}
               >
@@ -238,7 +238,7 @@ export const RegisterModal: React.FC = () => {
           {/* Register Button */}
           <Button
             type="submit"
-            className="w-full bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90"
+            className="w-full h-10 bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90"
             disabled={loading}
           >
             {loading ? (
@@ -255,7 +255,7 @@ export const RegisterModal: React.FC = () => {
           </Button>
 
           {/* Divider */}
-          <div className="relative my-6">
+          <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t border-border" />
             </div>
@@ -280,7 +280,7 @@ export const RegisterModal: React.FC = () => {
         </form>
 
         {/* Benefits Preview */}
-        <div className="mt-6 p-3 bg-gradient-to-r from-primary/10 to-premium-purple/10 rounded-lg border border-primary/20">
+        <div className="mt-4 p-3 bg-gradient-to-r from-primary/10 to-premium-purple/10 rounded-lg border border-primary/20">
           <h4 className="text-sm font-semibold text-foreground mb-2">What you get:</h4>
           <div className="text-xs text-muted-foreground space-y-1">
             <p>✨ Access to curated investment vaults</p>
