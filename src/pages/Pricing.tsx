@@ -190,44 +190,44 @@ export const Pricing: React.FC = () => {
   };
 
   return (
-    <div className="space-y-12 animate-fade-in">
+    <div className="space-y-8 sm:space-y-12 lg:space-y-16 animate-fade-in px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto py-8 sm:py-12 lg:py-16">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground via-primary to-premium-purple bg-clip-text text-transparent mb-4">
+      <div className="text-center space-y-4 sm:space-y-6 max-w-4xl mx-auto">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-foreground via-primary to-premium-purple bg-clip-text text-transparent">
           Choose Your Plan
         </h1>
-        <p className="text-muted-foreground text-xl max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-base sm:text-lg lg:text-xl xl:text-2xl max-w-3xl mx-auto leading-relaxed">
           Unlock the power of professional investment management with plans designed for every investor
         </p>
       </div>
 
       {/* Billing Toggle */}
       <div className="flex justify-center">
-        <div className="flex items-center space-x-4 bg-card/50 p-1 rounded-2xl border border-border">
+        <div className="flex items-center space-x-2 sm:space-x-4 bg-card/50 p-1.5 sm:p-2 rounded-2xl border border-border shadow-lg backdrop-blur-sm">
           <Button
             variant={billingCycle === 'monthly' ? 'default' : 'ghost'}
-            size="sm"
+            size="lg"
             onClick={() => setBillingCycle('monthly')}
-            className="rounded-xl px-6 transition-all duration-200"
+            className="rounded-xl px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-200"
           >
             Monthly
           </Button>
           <Button
             variant={billingCycle === 'annual' ? 'default' : 'ghost'}
-            size="sm"
+            size="lg"
             onClick={() => setBillingCycle('annual')}
-            className="rounded-xl px-6 transition-all duration-200"
+            className="rounded-xl px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-medium transition-all duration-200"
           >
             Annual
-            <Badge variant="secondary" className="ml-2 bg-vault-crypto-DEFAULT/20 text-vault-crypto-DEFAULT">
-              Save up to 20%
+            <Badge variant="secondary" className="ml-2 bg-vault-crypto-DEFAULT/20 text-vault-crypto-DEFAULT text-xs font-semibold">
+              <span className="hidden sm:inline">Save up to </span>20%
             </Badge>
           </Button>
         </div>
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto">
+      <div className="grid gap-6 sm:gap-8 lg:gap-6 xl:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {plans.map((plan) => {
           const Icon = plan.icon;
           const isCurrentPlan = isAuthenticated && currentPlan === plan.id;
@@ -237,48 +237,51 @@ export const Pricing: React.FC = () => {
             <Card 
               key={plan.id} 
               className={cn(
-                "premium-card relative overflow-hidden transition-all duration-300 hover:scale-105",
-                plan.popular && "ring-2 ring-primary ring-opacity-50 shadow-2xl scale-105",
+                "premium-card relative overflow-hidden transition-all duration-300 hover:scale-[1.02] lg:hover:scale-105 h-full flex flex-col",
+                plan.popular && "ring-2 ring-primary ring-opacity-50 shadow-2xl lg:scale-105 lg:z-10",
                 isCurrentPlan && "ring-2 ring-vault-crypto-DEFAULT ring-opacity-50"
               )}
             >
               {plan.popular && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-premium-purple text-white text-center py-2 text-sm font-semibold">
-                  <Sparkles className="inline h-4 w-4 mr-1" />
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-premium-purple text-white text-center py-2.5 sm:py-3 text-sm font-semibold z-10">
+                  <Sparkles className="inline h-4 w-4 mr-2" />
                   Most Popular
                 </div>
               )}
               
-              {isCurrentPlan && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-vault-crypto-DEFAULT to-premium-orange text-white text-center py-2 text-sm font-semibold">
-                  <Check className="inline h-4 w-4 mr-1" />
+              {isCurrentPlan && !plan.popular && (
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-vault-crypto-DEFAULT to-premium-orange text-white text-center py-2.5 sm:py-3 text-sm font-semibold z-10">
+                  <Check className="inline h-4 w-4 mr-2" />
                   Current Plan
                 </div>
               )}
 
-              <CardHeader className={cn("pb-4", plan.popular && "pt-12", isCurrentPlan && "pt-12")}>
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className={cn("p-3 rounded-2xl", plan.bgColor, `border ${plan.borderColor}`)}>
-                    <Icon className={cn("h-6 w-6", plan.color)} />
+              <CardHeader className={cn(
+                "pb-6 flex-shrink-0",
+                (plan.popular || (isCurrentPlan && !plan.popular)) && "pt-14 sm:pt-16"
+              )}>
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-6">
+                  <div className={cn("p-3 rounded-2xl mx-auto sm:mx-0", plan.bgColor, `border-2 ${plan.borderColor}`)}>
+                    <Icon className={cn("h-6 w-6 lg:h-7 lg:w-7", plan.color)} />
                   </div>
-                  <div>
-                    <CardTitle className="text-xl text-foreground">{plan.name}</CardTitle>
+                  <div className="text-center sm:text-left flex-1">
+                    <CardTitle className="text-xl lg:text-2xl text-foreground mb-2">{plan.name}</CardTitle>
                     {billingCycle === 'annual' && savings && (
-                      <Badge variant="outline" className="mt-1 text-xs text-vault-crypto-DEFAULT border-vault-crypto-DEFAULT">
+                      <Badge variant="outline" className="text-xs text-vault-crypto-DEFAULT border-vault-crypto-DEFAULT">
                         Save {savings}%
                       </Badge>
                     )}
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <div className="flex items-baseline space-x-1">
-                    <span className="text-4xl font-bold text-foreground">
+                <div className="text-center sm:text-left mb-6">
+                  <div className="flex items-baseline justify-center sm:justify-start space-x-1 mb-2">
+                    <span className="text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground">
                       {getDisplayPrice(plan)}
                     </span>
                     {plan.price > 0 && (
-                      <span className="text-muted-foreground">
-                        /{billingCycle === 'monthly' ? 'month' : 'month'}
+                      <span className="text-base lg:text-lg text-muted-foreground">
+                        /month
                       </span>
                     )}
                   </div>
@@ -289,19 +292,19 @@ export const Pricing: React.FC = () => {
                   )}
                 </div>
                 
-                <CardDescription className="text-sm leading-relaxed">
+                <CardDescription className="text-sm lg:text-base leading-relaxed text-center sm:text-left text-muted-foreground">
                   {plan.description}
                 </CardDescription>
               </CardHeader>
 
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6 flex-1 flex flex-col">
                 <Button 
                   className={cn(
-                    "w-full transition-all duration-200",
+                    "w-full transition-all duration-200 text-sm lg:text-base py-3 lg:py-4 font-semibold",
                     plan.popular 
-                      ? "bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 shadow-lg" 
-                      : "bg-gradient-to-r from-vault-tech-DEFAULT to-premium-blue hover:opacity-90",
-                    isCurrentPlan && "opacity-60 cursor-not-allowed"
+                      ? "bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 shadow-lg text-white" 
+                      : "bg-gradient-to-r from-vault-tech-DEFAULT to-premium-blue hover:opacity-90 text-white",
+                    isCurrentPlan && "bg-gradient-to-r from-vault-crypto-DEFAULT to-premium-orange opacity-60 cursor-not-allowed"
                   )}
                   onClick={() => handleSelectPlan(plan.id)}
                   disabled={isCurrentPlan}
@@ -321,16 +324,20 @@ export const Pricing: React.FC = () => {
                   )}
                 </Button>
 
-                <div className="space-y-3 pt-2">
+                <div className="space-y-4 flex-1">
                   {plan.features.map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-3">
+                    <div key={index} className="flex items-start space-x-3">
                       {feature.included ? (
-                        <Check className="h-4 w-4 text-vault-crypto-DEFAULT flex-shrink-0" />
+                        <div className="flex-shrink-0 mt-0.5">
+                          <Check className="h-4 w-4 text-vault-crypto-DEFAULT" />
+                        </div>
                       ) : (
-                        <X className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <div className="flex-shrink-0 mt-0.5">
+                          <X className="h-4 w-4 text-muted-foreground" />
+                        </div>
                       )}
                       <span className={cn(
-                        "text-sm",
+                        "text-sm lg:text-base leading-relaxed",
                         feature.included ? "text-foreground" : "text-muted-foreground line-through"
                       )}>
                         {feature.name}
@@ -345,22 +352,26 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* Feature Comparison Table - Desktop Only */}
-      <div className="hidden lg:block">
-        <Card className="premium-card">
-          <CardHeader>
-            <CardTitle className="text-2xl text-foreground text-center">Detailed Feature Comparison</CardTitle>
-            <CardDescription className="text-center">
+      <div className="hidden xl:block">
+        <Card className="premium-card shadow-xl">
+          <CardHeader className="text-center space-y-3 sm:space-y-4 py-8">
+            <CardTitle className="text-xl sm:text-2xl lg:text-3xl text-foreground">
+              Detailed Feature Comparison
+            </CardTitle>
+            <CardDescription className="text-base lg:text-lg">
               Compare all features across our plans
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="py-8">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-4 text-foreground font-semibold">Features</th>
+                  <tr className="border-b-2 border-border">
+                    <th className="text-left py-4 lg:py-6 text-base lg:text-lg text-foreground font-semibold">
+                      Features
+                    </th>
                     {plans.map((plan) => (
-                      <th key={plan.id} className="text-center py-4 text-foreground font-semibold">
+                      <th key={plan.id} className="text-center py-4 lg:py-6 text-base lg:text-lg text-foreground font-semibold">
                         {plan.name}
                       </th>
                     ))}
@@ -368,14 +379,16 @@ export const Pricing: React.FC = () => {
                 </thead>
                 <tbody>
                   {plans[0].features.map((feature, index) => (
-                    <tr key={index} className="border-b border-border/50">
-                      <td className="py-3 text-foreground">{feature.name}</td>
+                    <tr key={index} className="border-b border-border/50 hover:bg-muted/20 transition-colors">
+                      <td className="py-4 lg:py-5 text-sm lg:text-base text-foreground font-medium">
+                        {feature.name}
+                      </td>
                       {plans.map((plan) => (
-                        <td key={plan.id} className="text-center py-3">
+                        <td key={plan.id} className="text-center py-4 lg:py-5">
                           {plan.features[index].included ? (
-                            <Check className="h-4 w-4 text-vault-crypto-DEFAULT mx-auto" />
+                            <Check className="h-5 w-5 lg:h-6 lg:w-6 text-vault-crypto-DEFAULT mx-auto" />
                           ) : (
-                            <X className="h-4 w-4 text-muted-foreground mx-auto" />
+                            <X className="h-5 w-5 lg:h-6 lg:w-6 text-muted-foreground mx-auto" />
                           )}
                         </td>
                       ))}
@@ -389,33 +402,37 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* FAQ Section */}
-      <div>
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-foreground mb-4">Frequently Asked Questions</h2>
-          <p className="text-muted-foreground text-lg">
+      <div className="space-y-8 sm:space-y-12">
+        <div className="text-center space-y-4 sm:space-y-6">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">Frequently Asked Questions</h2>
+          <p className="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-2xl mx-auto">
             Everything you need to know about xVault
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto space-y-4">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {faqs.map((faq, index) => (
-            <Card key={index} className="premium-card">
+            <Card key={index} className="premium-card hover:shadow-lg transition-all duration-200">
               <CardHeader 
-                className="cursor-pointer"
+                className="cursor-pointer pb-4 sm:pb-6"
                 onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
               >
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg text-foreground text-left">{faq.question}</CardTitle>
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-base sm:text-lg lg:text-xl text-foreground text-left pr-6 leading-relaxed">
+                    {faq.question}
+                  </CardTitle>
                   {expandedFAQ === index ? (
-                    <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                    <ChevronUp className="h-5 w-5 lg:h-6 lg:w-6 text-muted-foreground flex-shrink-0 mt-1" />
                   ) : (
-                    <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                    <ChevronDown className="h-5 w-5 lg:h-6 lg:w-6 text-muted-foreground flex-shrink-0 mt-1" />
                   )}
                 </div>
               </CardHeader>
               {expandedFAQ === index && (
-                <CardContent className="pt-0">
-                  <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                <CardContent className="pt-0 pb-6">
+                  <p className="text-sm sm:text-base lg:text-lg text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </p>
                 </CardContent>
               )}
             </Card>
@@ -424,32 +441,36 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* CTA Section */}
-      <Card className="premium-card bg-gradient-to-r from-primary/10 to-premium-purple/10 border-primary/20">
-        <CardContent className="text-center py-12">
-          <Crown className="h-16 w-16 text-primary mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Start Investing?</h2>
-          <p className="text-muted-foreground text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of investors who trust xVault with their financial future. 
-            Start with our free plan or unlock premium features today.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <Card className="premium-card bg-gradient-to-r from-primary/10 to-premium-purple/10 border-primary/20 shadow-2xl">
+        <CardContent className="text-center py-12 sm:py-16 lg:py-20 space-y-6 sm:space-y-8">
+          <Crown className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 text-primary mx-auto" />
+          <div className="space-y-4 sm:space-y-6 max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-foreground">
+              Ready to Start Investing?
+            </h2>
+            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl xl:text-2xl leading-relaxed">
+              Join thousands of investors who trust xVault with their financial future. 
+              Start with our free plan or unlock premium features today.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center max-w-md sm:max-w-none mx-auto pt-4">
             {!isAuthenticated && (
               <Button 
                 size="lg"
                 onClick={openLoginModal}
-                className="bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 shadow-lg"
+                className="bg-gradient-to-r from-primary to-premium-purple hover:from-primary/90 hover:to-premium-purple/90 shadow-xl w-full sm:w-auto text-sm sm:text-base lg:text-lg px-8 lg:px-12 py-3 lg:py-4"
               >
                 Get Started Free
-                <ArrowRight className="h-4 w-4 ml-2" />
+                <ArrowRight className="h-4 w-4 lg:h-5 lg:w-5 ml-2" />
               </Button>
             )}
             <Button 
               size="lg" 
               variant="outline"
               onClick={() => navigate('/')}
-              className="border-border hover:border-primary/50"
+              className="border-border hover:border-primary/50 hover:bg-primary/5 w-full sm:w-auto text-sm sm:text-base lg:text-lg px-8 lg:px-12 py-3 lg:py-4"
             >
-              <BarChart3 className="h-4 w-4 mr-2" />
+              <BarChart3 className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
               View All Vaults
             </Button>
           </div>
