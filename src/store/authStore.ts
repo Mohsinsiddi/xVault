@@ -180,7 +180,7 @@ export const useAuthStore = create<AuthStore>()(
       // Getters
       hasActiveSubscription: () => {
         const { user } = get();
-        return user?.plan !== 'free' ?? false;
+        return user ? user.plan !== 'free' : false;
       },
 
       canAccessVault: (vaultId) => {

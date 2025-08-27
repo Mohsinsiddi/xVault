@@ -9,4 +9,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      onwarn: () => {}, // Ignore all build warnings
+    },
+  },
+  esbuild: {
+    logOverride: {
+      'this-is-undefined-in-esm': 'silent',
+    },
+  },
 })
